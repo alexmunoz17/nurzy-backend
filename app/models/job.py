@@ -23,4 +23,3 @@ class Job(db.Model):
     end_date = db.Column(db.DateTime, nullable=False)
     hourly_rate_min = db.Column(db.Float, nullable=False)
     hourly_rate_max = db.Column(db.Float, nullable=False)
-    caredits
