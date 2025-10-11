@@ -1,37 +1,34 @@
 from datetime import datetime
 
 from app.extensions import db, bcrypt
+from app.models.associations import user_departments
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    created_at = db.Column(db.DateTime, default=datetime.now)
+    updated_at = db.Column(db.DateTime)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(256), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.now, nullable=False)
-    updated_at = db.Column(db.DateTime, nullable=False)
-    profile_pic = db.Column(db.Binary, nullable=False)
-    profile_complete = db.Column(db.Boolean, nullable=False, default=False)
-
-    # TODO: Role table: 1. Nurse, 2. Facility, (3. Partner - After launch)
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=False)
-
-    firstname = db.Column(db.String(80), unique=False, nullable=False)
-    lastname = db.Column(db.String(80), unique=False, nullable=False)
-    street = db.Column(db.String(80), unique=False, nullable=False)
-    city = db.Column(db.String(80), unique=False, nullable=False)
-    zip = db.Column(db.String(80), unique=False, nullable=False)
-    phone = db.Column(db.String(80), unique=False, nullable=False)
+    role = db.relationship('Role', back_populates='users')
+    profile_pic = db.Column(db.String(512))
+    profile_complete = db.Column(db.Boolean, default=False)
+    firstname = db.Column(db.String(80))
+    lastname = db.Column(db.String(80))
+    street = db.Column(db.String(80))
+    city = db.Column(db.String(80))
+    zip = db.Column(db.String(80))
+    phone = db.Column(db.String(80))
 
     # Nurse data
-    cv = db.Column(db.Binary, unique=False, nullable=False)
-    # TODO: Profession table
-    profession_id = db.Column(db.Integer, db.ForeignKey('profession.id'), nullable=False)
-    experience = db.Column(db.Integer, unique=False, nullable=False)
-    # TODO: Department table
-    department_id = db.Column(db.Integer, db.ForeignKey('department.id'), nullable=False)
+    cv = db.Column(db.String(512))
+    profession_id = db.Column(db.Integer, db.ForeignKey('profession.id'))
+    profession = db.relationship('Profession', back_populates='users')
+    experience_in_years = db.Column(db.Integer)
+    departments = db.relationship('Department', secondary=user_departments, back_populates='users')
     # TODO: Availability table
-    availability_id = db.Column(db.Integer, db.ForeignKey('availability.id'), nullable=False)
-
-    caredit_count = db.Column(db.Integer, default=0, nullable=False)
+    availability_id = db.Column(db.Integer, db.ForeignKey('availability.id'))
+    caredit_count = db.Column(db.Integer, default=0)
 
     # TODO: Data protection regulation fields
 
