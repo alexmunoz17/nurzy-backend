@@ -10,5 +10,5 @@ class Profession(db.Model):
     #  6. Fachfrau / Fachmann Betreuung (FaBe)
     #  7. Other
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), unique=False, nullable=False)
-    users = db.relationship('User', back_populates='profession')
+    name = db.Column(db.String(80))
+    nurse_profiles = db.relationship('NurseProfile', back_populates='profession')
